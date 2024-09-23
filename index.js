@@ -35,7 +35,7 @@ app.post('/users', async (req, res) => {
         const users = await read();
 
         //TODO validate data
-        const id = users[users.length - 1].id + 1;
+        const id = users.length ? users[users.length - 1]?.id + 1 : 1;
         const newUser = {id, name, email, password};
         users.push(newUser);
 
