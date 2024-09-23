@@ -19,6 +19,19 @@ app.get('/users', async (req, res) => {
 app.post('/users', async (req, res) => {
     try {
         const {name, email, password} = req.body;
+
+        if (!name || name.length < 3) {
+            return res.status(400).send('Name is required and should be at least 3 characters long');
+        }
+
+        if (!email || email.includes('@')) {
+            return res.status(400).send('Email is required and should be valid');
+        }
+
+        if (!password || password.length<6){
+            return res.status(400).send('Password is requied and should be at least 6 character long');
+        }
+
         const users = await read();
 
         //TODO validate data
@@ -40,6 +53,7 @@ app.get('/users/:userId', async (req, res) => {
 
         const userId = Number(req.params.userId);
         const user = users.find(user => user.id === userId);
+
         if (!user) {
             return res.status(404).send('User not found');
         }
@@ -53,6 +67,20 @@ app.put('/users/:userId', async (req, res) => {
     try {
         const userId = Number(req.params.userId);
 
+        const { name, email, password } = req.body;
+
+        if (!name || name.length < 3) {
+            return res.status(400).send('Name is required and should be at least 3 characters long');
+        }
+
+        if (!email || email.includes('@')) {
+            return res.status(400).send('Email is required and should be valid');
+        }
+
+        if (!password || password.length<6){
+            return res.status(400).send('Password is requied and should be at least 6 character long');
+        }
+
         const users = await read();
 
         const userIndex = users.findIndex(user => user.id === userId);
@@ -60,8 +88,6 @@ app.put('/users/:userId', async (req, res) => {
         if (userIndex === -1) {
             return res.status(404).send('User not found');
         }
-
-        const {name, email, password} = req.body;
 
         //TODO validate data
         // users[userIndex] = {...users[userIndex], name, email, password};
